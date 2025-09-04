@@ -4,11 +4,12 @@
 
 #ifndef ITEMSET_H
 #define ITEMSET_H
+#include <iostream>
 #include <set>
 
 
 class itemset : public std::set<int> {
-
+    friend std::ostream& operator<<(std::ostream& os, const itemset& is);
 };
 
 

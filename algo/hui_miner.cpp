@@ -10,9 +10,11 @@
 #include <string>
 
 #include "../global.h"
+#include "../tool/logger.h"
 
 void hui_miner::prepAlgorithm(Database database, double minutils) {
     // first database scan to calculate twu for each item;
+    LOG(trace) << "Hello from hui_miner";
     for (Transaction &t : database.transactions) {
         double tu = 0;
         for (auto [k, v] : t.item_quantity) {
