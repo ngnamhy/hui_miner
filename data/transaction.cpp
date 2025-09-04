@@ -1,6 +1,6 @@
 #include <map>
 
-#include "../global.h"
+#include "../tool/global.h"
 #include "transaction.h"
 #include "iostream"
 

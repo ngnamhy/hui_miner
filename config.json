@@ -1,0 +1,6 @@
+{
+  "input_path": "D:\\Code\\NCKH\\Dataset",
+  "dataset": "test",
+  "minutils_percentage": 0.20,
+  "severity": "info"
+}

@@ -11,7 +11,8 @@ namespace Global {
 
     // Input configuration
     std::string input_path = "D:\\Code\\NCKH\\Dataset";
-    std::string dataset = "test";
-    double minutils = 4.0;
-
+    std::string dataset = "accidents";
+    double minutils_percentage = 40 / 100.0;
+    double minutils;
+    boost::log::trivial::severity_level severity = boost::log::trivial::debug;
 }

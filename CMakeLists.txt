@@ -13,13 +13,6 @@ set(CMAKE_CXX_STANDARD 20)
 # Find Boost with log and log_setup components
 find_package(Boost REQUIRED COMPONENTS log log_setup thread filesystem date_time regex chrono atomic system)
 
-#
-### Add BOOST_LOG_DYN_LINK macro for dynamic linking
-##add_definitions(-DBOOST_LOG_DYN_LINK)
-#
-## Add include directories
-#include_directories(${Boost_INCLUDE_DIRS})
-
 # Add source files
 add_executable(hui_miner1
         main.cpp
@@ -31,16 +24,18 @@ add_executable(hui_miner1
         data/transaction.cpp
         data/database.cpp
         data/database.h
-        global.h
-        global.cpp
-        input.h
-        input.cpp
+        tool/global.h
+        tool/global.cpp
+        tool/input.h
+        tool/input.cpp
         algo/hui_miner.cpp
         algo/hui_miner.h
         data/utility_list_element.cpp
         data/utility_list_element.h
         data/itemset.cpp
         data/itemset.h
+        tool/config_loader.cpp
+        tool/config_loader.h
 )
 
 # Link Boost libraries

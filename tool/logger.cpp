@@ -6,6 +6,8 @@
 #include <boost/date_time/posix_time/posix_time.hpp> // Added for ptime
 #include <boost/log/expressions/formatters/date_time.hpp>
 #include <boost/log/support/date_time.hpp>
+
+#include "global.h"
 namespace logging = boost::log;
 
 
@@ -30,6 +32,6 @@ void logger::init_logging() {
 
     // Set minimum log level
     logging::core::get()->set_filter(
-        logging::trivial::severity >= logging::trivial::info
+        logging::trivial::severity >= Global::severity
     );
 }

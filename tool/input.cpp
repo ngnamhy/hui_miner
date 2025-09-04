@@ -3,7 +3,7 @@
 #include <vector>
 #include <map>
 #include "global.h"
-#include "data/database.h"
+#include "../data/database.h"
 #include "input.h"
 
 
@@ -29,7 +29,7 @@ Database Input::read_data() {
     Global::n_items = m;
 
     // Khởi tạo danh sách transactions
-    std::vector<std::vector<std::pair<int, int>>> temp_transactions(n + 1); // transactions[1..n]
+    std::vector<std::vector<std::pair<int, int> > > temp_transactions(n + 1); // transactions[1..n]
     int item_id, tid, quantity;
     while (hui_stream >> tid >> item_id >> quantity) {
         temp_transactions[tid].push_back({item_id, quantity});

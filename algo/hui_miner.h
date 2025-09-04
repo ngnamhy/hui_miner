@@ -13,8 +13,8 @@ class hui_miner {
 public:
     std::set<itemset> huis;
 
-    void prepAlgorithm(Database database, double minutils);
-    void huimine(std::vector<int> & prefix, utility_list prefix_ul, std::vector<utility_list> uls);
+    void work(Database database, double minutils);
+    void huimine(std::vector<int> & prefix, utility_list prefix_ul, const std::vector<utility_list> &uls);
 };
 
 

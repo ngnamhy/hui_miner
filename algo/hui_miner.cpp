@@ -9,89 +9,75 @@
 #include <ostream>
 #include <string>
 
-#include "../global.h"
+#include "../tool/global.h"
 #include "../tool/logger.h"
 
-void hui_miner::prepAlgorithm(Database database, double minutils) {
+void hui_miner::work(Database database, double minutils_percentage) {
     // first database scan to calculate twu for each item;
-    LOG(trace) << "Hello from hui_miner";
-    for (Transaction &t : database.transactions) {
+
+    double sum_tu = 0.0;
+    for (Transaction &t: database.transactions) {
         double tu = 0;
-        for (auto [k, v] : t.item_quantity) {
+        for (auto [k, v]: t.item_quantity) {
             tu += v * Global::item_utility[k];
         }
-        for (auto [k, v] : t.item_quantity) {
+        sum_tu += tu;
+        for (auto [k, v]: t.item_quantity) {
             Global::twu[k] += tu;
         }
     }
 
-    std::vector<utility_list> high_twu_itemsets;
+    double minutils = minutils_percentage * sum_tu;
+    LOG(debug) << sum_tu << " " << minutils_percentage << std::endl;
+    Global::minutils = minutils;
 
-    for (auto [k, v] : Global::twu) {
+    std::vector<utility_list> high_twu_itemsets_uls;
+
+    for (auto [k, v]: Global::twu) {
         if (v >= minutils) {
-            high_twu_itemsets.push_back(utility_list(k));
+            high_twu_itemsets_uls.emplace_back(k);
         }
     }
 
-    std::sort(high_twu_itemsets.begin(), high_twu_itemsets.end(), [&](utility_list i, utility_list j) {
+    std::ranges::sort(high_twu_itemsets_uls, [&](const utility_list &i, const utility_list &j) {
         return Global::twu[i.last_item] < Global::twu[j.last_item];
     });
     std::map<int, int> map_item_to_index;
-    for (int i = 0; i < high_twu_itemsets.size(); ++i) {
-        map_item_to_index[high_twu_itemsets[i].last_item] = i;
+    for (int i = 0; i < high_twu_itemsets_uls.size(); ++i) {
+        map_item_to_index[high_twu_itemsets_uls[i].last_item] = i;
     }
 
-    for (Transaction &t : database.transactions) {
-        std::sort(t.item_quantity.begin(), t.item_quantity.end(), [&](std::pair<int, int> i,  std::pair<int, int> j) {
+    for (Transaction &t: database.transactions) {
+        std::ranges::sort(t.item_quantity, [&](const std::pair<int, int> i, const std::pair<int, int> j) {
             return Global::twu[i.first] < Global::twu[j.first];
         });
         double rutils = 0;
         for (int i = t.item_quantity.size() - 1; i >= 0; i--) {
-            if (map_item_to_index.count(t.item_quantity[i].first) == 0) { continue; }
-            utility_list& ul = high_twu_itemsets[map_item_to_index[t.item_quantity[i].first]];
+            if (!map_item_to_index.contains(t.item_quantity[i].first)) { continue; }
+            utility_list &ul = high_twu_itemsets_uls[map_item_to_index[t.item_quantity[i].first]];
             double iutils = t.item_quantity[i].second * Global::item_utility[t.item_quantity[i].first];
             ul.add(utility_list_element(t.id, iutils, rutils));
             rutils += iutils;
         }
     }
 
-    // for (auto i : high_twu_itemsets) {
-    //     std::cout << i.last_item << " " << i.sum_iutils << std::endl;
-    //     for (auto j : i.elements) {
-    //         std::cout << j << std::endl;
-    //     }
-    // }
-
-    // std::cout << "START MINING " << std::endl;
-
-    std::vector<int> prefix = std::vector<int>();
-    huimine(prefix, utility_list(), high_twu_itemsets);
+    auto prefix = std::vector<int>();
+    huimine(prefix, utility_list(), high_twu_itemsets_uls);
 }
 
-itemset construct(std::vector<int> & prefix, int item) {
-    itemset result = itemset();
-    std::string str = "";
-    for (int i : prefix) {
+itemset construct(const std::vector<int> &prefix, const int item) {
+    auto result = itemset();
+    for (int i: prefix) {
         result.insert(i);
-        str += std::to_string(i);
     }
     result.insert(item);
-    str += std::to_string(item);
-    // std::cout << "FOUND HUI: " << str << std::endl;
     return result;
 }
 
-void hui_miner::huimine(std::vector<int> & prefix, utility_list prefix_ul, std::vector<utility_list> uls) {
-    // if (prefix.size()) {
-    //     std::cout << prefix.back() << std::endl;
-    // }
-    // else {
-    //     std::cout << "{}" << std::endl;
-    // }
+void hui_miner::huimine(std::vector<int> &prefix, utility_list prefix_ul, const std::vector<utility_list> &uls) {
     for (int i = 0; i < uls.size(); i++) {
         utility_list ulx = uls[i];
         if (ulx.sum_iutils >= Global::minutils) {
-            // std::cout << "FOUND: " << ulx.last_item << " " << ulx.sum_iutils << std::endl;
             this->huis.insert(construct(prefix, ulx.last_item));
         }
         if (ulx.sum_iutils + ulx.sum_rutils < Global::minutils) {
@@ -109,5 +95,4 @@ void hui_miner::huimine(std::vector<int> & prefix, utility_list prefix_ul, std::
         huimine(prefix, ulx, next_ul);
         prefix.pop_back();
     }
-    // std::cout << "back" << std::endl;
 }

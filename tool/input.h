@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 #include <string>
-#include "data/database.h"
+#include "../data/database.h"
 
 class Input {
 private:
