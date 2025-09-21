@@ -1,19 +1,17 @@
-# HUI_MINER
+# HUI_ALGO
 
 ---
 
-An implementation of [HUI-Miner](https://www.philippe-fournier-viger.com/spmf/huiminer.pdf) algorithm in C++.
+An implementation of high utility itemset mining (HUIM) algorithm in C++.
 
 ⚠️ This implementation is still under development.
 
 ---
 
 ## Overview
-HUI-Miner is an algorithm for **High-Utility Itemset Mining (HUIM)**.  
-Given a transaction database with items, quantities, and profits, it finds all itemsets whose total utility is greater than or equal to a given threshold (`minutil`).
+**High-Utility Itemset Mining (HUIM)**: Given a transaction database with items, quantities, and profits, it finds all itemsets whose total utility is greater than or equal to a given threshold (`minutil`).
 
 This implementation:
-- Uses **utility-lists** to avoid scanning the database multiple times.
 - Supports configuration via external **JSON config**.
 - Logs runtime and memory usage for benchmarking.
 
@@ -21,6 +19,7 @@ This implementation:
 
 ## Input Format
 You will need two files with the same name but different extensions: `.hui` and `.pro`.
+These two files together represent a dataset for input.
 
 ### `.hui` file
 The `.hui` file contains the transactions with items and their quantities.
@@ -57,7 +56,8 @@ Example `config.json`:
 ```json
 {
   "input_path": "path/to/your/dataset",
-  "dataset": "accidents",
+  "dataset": "test",
+  "algorithm": "fhm", 
   "minutils_percentage": 0.4,
   "severity": "debug"
 }
