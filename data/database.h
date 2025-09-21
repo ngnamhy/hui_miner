@@ -5,15 +5,18 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 #include <vector>
+#include <string>
 
 #include "transaction.h"
 
-class Database {
+class database {
 public:
-    std::vector<Transaction> transactions;
+    std::vector<transaction> transactions;
     double total_profit;
 
-    Database(std::vector<Transaction> transactions);
+    std::string to_string();
+
+    database(std::vector<transaction> transactions);
 };
 
 #endif //DATABASE_H

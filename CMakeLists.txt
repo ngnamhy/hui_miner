@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 20)
 find_package(Boost REQUIRED COMPONENTS log log_setup thread filesystem date_time regex chrono atomic system)
 
 # Add source files
-add_executable(hui_miner1
+add_executable(hui_miner
         main.cpp
         tool/logger.cpp
         tool/logger.h
@@ -36,7 +36,15 @@ add_executable(hui_miner1
         data/itemset.h
         tool/config_loader.cpp
         tool/config_loader.h
+        algo/fhm.cpp
+        algo/fhm.h
+        tool/common.h
+        algo/hui_algo.h
+        algo/efim.cpp
+        algo/efim.h
+        data/projected_transaction.cpp
+        data/projected_transaction.h
 )
 
 # Link Boost libraries
-target_link_libraries(hui_miner1 PRIVATE Boost::log Boost::log_setup Boost::thread Boost::filesystem Boost::date_time Boost::regex Boost::chrono Boost::atomic Boost::system)
+target_link_libraries(hui_miner PRIVATE Boost::log Boost::log_setup Boost::thread Boost::filesystem Boost::date_time Boost::regex Boost::chrono Boost::atomic Boost::system)

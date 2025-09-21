@@ -4,6 +4,8 @@
 
 #include "utility_list.h"
 
+#include "../tool/global.h"
+
 utility_list::utility_list() {
 
 }
@@ -19,6 +21,7 @@ void utility_list::add(utility_list_element element) {
 }
 
 utility_list join(utility_list& p, utility_list& px, utility_list& py) {
+    Global::join_counts += 1;
     int p_index = 0;
     int py_index = 0;
     utility_list pxy = utility_list(py.last_item);

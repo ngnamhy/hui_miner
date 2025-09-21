@@ -8,14 +8,18 @@
 #include <map>
 #include <utility>
 #include <vector>
+#include <string>
 
-class Transaction {
+class transaction {
 public:
     std::vector<std::pair<int, int>> item_quantity;
     int id;
     double profit;
 
-    Transaction(int id, std::vector<std::pair<int, int>> item_quantity);
+    std::string to_string();
+
+    transaction() {}
+    transaction(int id, std::vector<std::pair<int, int>> item_quantity);
 
 };
 

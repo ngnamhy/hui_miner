@@ -14,12 +14,12 @@ Input::Input() {
 }
 
 // Đọc dữ liệu từ file .hui và .pro, trả về một Database
-Database Input::read_data() {
+database Input::read_data() {
     // Đọc file .hui
     std::ifstream hui_stream(hui_file);
     if (!hui_stream.is_open()) {
         std::cerr << "Error: Cannot open file " << hui_file << std::endl;
-        return Database({});
+        return database({});
     }
 
     // Đọc dòng đầu tiên: n (số transaction) và m (số item)
@@ -56,7 +56,7 @@ Database Input::read_data() {
     pro_stream.close();
 
     // Chuyển đổi temp_transactions thành vector<Transaction>
-    std::vector<Transaction> transactions;
+    std::vector<transaction> transactions;
     for (int i = 1; i <= n; ++i) {
         if (!temp_transactions[i].empty()) {
             // Chỉ thêm transaction có item

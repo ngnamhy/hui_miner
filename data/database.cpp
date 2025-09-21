@@ -3,9 +3,20 @@
 #include <vector>
 #include "transaction.h"
 
-Database::Database(std::vector<Transaction> transactions): total_profit(0) {
+std::string database::to_string() {
+    std::string result = "\n";
+    for (auto t : transactions) {
+        result += t.to_string();
+        if (&t != &transactions.back()) {
+            result += "\n";
+        }
+    }
+    return result;
+}
+
+database::database(std::vector<transaction> transactions): total_profit(0) {
     this->transactions = transactions;
-    for (Transaction transaction: this->transactions) {
+    for (transaction transaction: this->transactions) {
         total_profit += transaction.profit;
     }
 }

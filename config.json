@@ -1,6 +1,7 @@
 {
   "input_path": "D:\\Code\\NCKH\\Dataset",
+  "severity": "debug",
+  "algorithm": "efim",
   "dataset": "test",
-  "minutils_percentage": 0.20,
-  "severity": "info"
+  "minutils_percentage": 0.05
 }

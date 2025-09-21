@@ -1,8 +1,8 @@
 //
-// Created by hvmegy on 03/09/2025.
+// Created by hvmegy on 18/09/2025.
 //
 
-#include "hui_miner.h"
+#include "fhm.h"
 
 #include <algorithm>
 #include <iostream>
@@ -13,7 +13,7 @@
 #include "../tool/logger.h"
 #include "../tool/common.h"
 
-void hui_miner::work(database &database, double minutils_percentage) {
+void fhm::work(database &database, double minutils_percentage) {
     // first database scan to calculate twu for each item;
 
     double sum_tu = 0.0;
@@ -59,21 +59,24 @@ void hui_miner::work(database &database, double minutils_percentage) {
             double iutils = t.item_quantity[i].second * Global::item_utility[t.item_quantity[i].first];
             ul.add(utility_list_element(t.id, iutils, rutils));
             rutils += iutils;
+            for (int j = i + 1; j < t.item_quantity.size(); j++) {
+                Global::eucs[t.item_quantity[i].first][t.item_quantity[j].first] += Global::twu[t.item_quantity[i].first];
+            }
         }
     }
 
-    LOG(debug) << high_twu_itemsets_uls.size() << std::endl;
 
     auto prefix = std::vector<int>();
     huimine(prefix, utility_list(), high_twu_itemsets_uls);
 }
 
-void hui_miner::huimine(std::vector<int> &prefix, utility_list prefix_ul, const std::vector<utility_list> &uls) {
+void fhm::huimine(std::vector<int> &prefix, utility_list prefix_ul, const std::vector<utility_list> &uls) {
+    int x = 0;
+    int y = 0;
     for (int i = 0; i < uls.size(); i++) {
         utility_list ulx = uls[i];
-        LOG(debug) << ulx.sum_iutils << " " << ulx.sum_iutils + ulx.sum_rutils << " " << Global::minutils << std::endl;
+        x = ulx.last_item;
         if (ulx.sum_iutils >= Global::minutils) {
-            LOG(debug) << "insert a hui";
             this->huis.insert(construct(prefix, ulx.last_item));
         }
         if (ulx.sum_iutils + ulx.sum_rutils < Global::minutils) {
@@ -81,10 +84,12 @@ void hui_miner::huimine(std::vector<int> &prefix, utility_list prefix_ul, const 
         }
 
         std::vector<utility_list> next_ul;
-
         for (int j = i + 1; j < uls.size(); j++) {
             utility_list uly = uls[j];
-            next_ul.push_back(join(prefix_ul, ulx, uly));
+            y = uly.last_item;
+            if (Global::eucs.contains(x) && Global::eucs[x].contains(y) && Global::eucs[x][y] >= Global::minutils) {
+                next_ul.push_back(join(prefix_ul, ulx, uly));
+            }
         }
 
         prefix.push_back(ulx.last_item);

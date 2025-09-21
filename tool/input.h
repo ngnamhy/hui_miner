@@ -10,7 +10,7 @@ private:
 
 public:
     Input();
-    Database read_data();
+    database read_data();
 };
 
 #endif // INPUT_H

@@ -13,6 +13,7 @@ namespace Config {
         Global::input_path = pt.get<std::string>("input_path");
         Global::dataset = pt.get<std::string>("dataset");
         Global::minutils_percentage = pt.get<double>("minutils_percentage");
+        Global::algorithm = pt.get<std::string>("algorithm");
 
         std::string sev = pt.get<std::string>("severity", "info");
         if (sev == "debug") Global::severity = boost::log::trivial::debug;
